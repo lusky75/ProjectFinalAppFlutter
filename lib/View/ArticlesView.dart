@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Model/ArticleModel.dart';
+import 'package:projet_final_app_flutter/View/CreateArticleView.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
-import 'package:intl/intl.dart';
 
 class ArticlesView extends StatefulWidget {
   @override
@@ -30,7 +30,34 @@ class ArticlesViewState extends State<ArticlesView> {
         title : const Text("My articles"),
         backgroundColor: Colors.black38,
       ),
-      body: bodyPage()
+      body:
+        SafeArea(child:
+          Stack(children: [
+            bodyPage(),
+            Align
+              (
+              alignment: Alignment.bottomRight,
+              child:
+                Padding(padding: const EdgeInsets.all(20) ,
+                  child:
+                  ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(context,  MaterialPageRoute(
+                            builder: (context){
+                              return CreateArticleView();
+                            })
+                        );
+                      },
+                      icon: Icon( // <-- Icon
+                        Icons.edit,
+                        size: 24.0,
+                      ),
+                      label: Text('Write a new article'), // <-- Text
+                    ),
+                )
+              )
+          ],),
+        )
     );
   }
 
@@ -39,7 +66,6 @@ class ArticlesViewState extends State<ArticlesView> {
     For each article's if user.id == article.user_uid => it shows a Card
     Else an empty Container
    */
-
   Widget bodyPage(){
     return StreamBuilder<QuerySnapshot>(
       //On cherche tous les documentssnpshots de l'utilisateur dans la bdd
@@ -50,45 +76,55 @@ class ArticlesViewState extends State<ArticlesView> {
             return const CircularProgressIndicator.adaptive();
           } else {
             List documents = snapshot.data!.docs;
-            return ListView.builder(
-              //gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              padding: EdgeInsets.all(20),
-              itemCount: documents.length,
-              itemBuilder: (context,index){
-                ArticleModel article = ArticleModel(documents[index]);
-                if (GlobalUser.id == article.user_uid) {
-                  return Dismissible(
+            return
+                ListView.builder
+                (
+                //gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                  padding: EdgeInsets.all(20),
+                  itemCount: documents.length,
+                  itemBuilder: (context,index){
+                    ArticleModel article = ArticleModel(documents[index]);
+                    if (GlobalUser.id == article.user_uid)
+                    {
+                      return Dismissible(
 
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (DismissDirection direction) {
-                        FirestoreHelper().deleteUser(article.id);
-                      },
-                      key: Key(article.id),
-                      child: Column(children: [
-                        Card(
-                          elevation: 10,
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: ListTile(
-                            onTap: () {
-                            },
-                            title: Text(article.title),
-                            subtitle: Text(article.description),
-                            //leading: Image.network(user.avatar!),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (DismissDirection direction) {
+                            FirestoreHelper().deleteUser(article.id);
+                          },
+                          key: Key(article.id),
+                          child: Column(children: [
+                            Card(
+                              elevation: 10,
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: ListTile(
+                                onTap: () {
+                                },
+                                title: Text(article.title),
+                                subtitle: Text(article.description),
+                                //leading: Image.network(user.avatar!),
 
-                            //leading: Text("${article.created_at}"),
-                          ),
+                                //leading: Text("${article.created_at}"),
+                              ),
 
-                        ),
-                        Text("Le ${DateFormat.yMMMd().format(article.created_at)}"),
-                      ],)
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            );
+                            ),
+                          Align
+                            (
+                              alignment: Alignment.bottomRight,
+                              child:
+                              Padding(padding: const EdgeInsets.all(10) ,
+                                child:
+                                Text("${getArticleDateFormat(article.created_at)}")
+                              )
+                          )
+                          ],)
+                      );
+                  } else {
+                    return Container();
+                  }
+              });
           }
         }
     );

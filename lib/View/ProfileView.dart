@@ -25,7 +25,10 @@ class ProfileViewState extends State<ProfileView> {
           child: MyDrawerView(),
         ),
 
-        appBar: AppBar(),
+        appBar: AppBar(
+          title : const Text("Mon profil"),
+          backgroundColor: Colors.black38,
+        ),
         body: Center(
           child:
           Column(children: [

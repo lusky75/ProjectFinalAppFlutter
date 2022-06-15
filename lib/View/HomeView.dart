@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/Model/ArticleModel.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
-
+import 'package:projet_final_app_flutter/Services/librairies.dart';
 import 'package:intl/intl.dart';
 
 class HomeView extends StatefulWidget {
@@ -43,10 +43,7 @@ class HomeViewState extends State<HomeView>{
           if(!snapshot.hasData){
             // Il n'y aucune donnée dans la BDD
             return const CircularProgressIndicator.adaptive();
-          }
-          else
-          {
-            //
+          } else {
             List documents = snapshot.data!.docs;
             return ListView.builder(
               //gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
@@ -80,7 +77,15 @@ class HomeViewState extends State<HomeView>{
                         ),
 
                       ),
-                      Text("Le ${DateFormat.yMMMd().format(article.created_at)}"),
+                      Align
+                        (
+                          alignment: Alignment.bottomRight,
+                          child:
+                          Padding(padding: const EdgeInsets.all(10) ,
+                              child:
+                              Text("${getArticleDateFormat(article.created_at)} by ${article.author_pseudo}")
+                          )
+                      )
                     ],)
                   );
               },
