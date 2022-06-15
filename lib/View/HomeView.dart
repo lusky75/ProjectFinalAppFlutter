@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:projet_final_app_flutter/Model/UserModel.dart';
+import 'package:projet_final_app_flutter/Model/ArticleModel.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
-import 'package:projet_final_app_flutter/Services/librairies.dart';
 import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
+
+import 'package:intl/intl.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -13,6 +14,8 @@ class HomeView extends StatefulWidget {
 }
 
 class HomeViewState extends State<HomeView>{
+  final dateformat = new DateFormat('yyyy-MM-dd hh:mm');
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -24,7 +27,7 @@ class HomeViewState extends State<HomeView>{
         ),
 
         appBar : AppBar(
-          title : const Text("Home page"),
+          title : const Text("Home"),
           backgroundColor: Colors.black38,
         ),
         backgroundColor: Colors.white,
@@ -35,7 +38,7 @@ class HomeViewState extends State<HomeView>{
   Widget bodyPage(){
     return StreamBuilder<QuerySnapshot>(
       //On cherche tous les documentssnpshots de l'utilisateur dans la bdd
-        stream: FirestoreHelper().fire_users.snapshots(),
+        stream: FirestoreHelper().fire_articles.snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData){
             // Il n'y aucune donnée dans la BDD
@@ -50,47 +53,37 @@ class HomeViewState extends State<HomeView>{
               padding: EdgeInsets.all(20),
               itemCount: documents.length,
               itemBuilder: (context,index){
-                UserModel user = UserModel(documents[index]);
-                if(GlobalUser.id != user.id) {
+                ArticleModel article = ArticleModel(documents[index]);
                   return Dismissible(
 
                     direction: DismissDirection.endToStart,
                     onDismissed: (DismissDirection direction){
-                      FirestoreHelper().deleteUser(user.id);
+                      FirestoreHelper().deleteUser(article.id);
                     },
-                    key: Key(user.id),
+                    key: Key(article.id),
+                    child: Column(children: [
+                      Card(
+                        elevation: 10,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: ListTile(
+                          onTap: () {
+                            //Détail de l'utilisateur
 
-                    child: Card(
-                      elevation: 10,
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: ListTile(
-                        onTap: () {
-                          //Détail de l'utilisateur
+                          },
+                          title: Text(article.title),
+                          subtitle: Text(article.description),
+                          //leading: Image.network(user.avatar!),
 
-                        },
-                        title: Text(user.completeName()),
-                        subtitle: Text(user.pseudo!),
-                        leading: Image.network(user.avatar!),
-                        trailing: Text(user.email),
+                          //leading: Text("${article.created_at}"),
+                        ),
+
                       ),
-
-                    ),
+                      Text("Le ${DateFormat.yMMMd().format(article.created_at)}"),
+                    ],)
                   );
-
-                }
-                else
-                {
-                  return Container();
-                }
-
-
-
-
               },
-
-
             );
           }
         }

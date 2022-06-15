@@ -8,6 +8,7 @@ import 'package:projet_final_app_flutter/Services/global.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:projet_final_app_flutter/View/ArticlesView.dart';
 import 'package:projet_final_app_flutter/View/HomeView.dart';
+import 'package:projet_final_app_flutter/View/ProfileView.dart';
 import 'package:projet_final_app_flutter/main.dart';
 import 'package:projet_final_app_flutter/Model/UserModel.dart';
 
@@ -113,7 +114,7 @@ class MyDrawerViewState extends  State<MyDrawerView>{
 
             ListTile(
               leading: Icon(Icons.border_color),
-              title: Text('Articles'),
+              title: Text('My articles'),
               onTap: () => {
                 Navigator.push(context,  MaterialPageRoute(
                     builder: (context){
@@ -126,7 +127,13 @@ class MyDrawerViewState extends  State<MyDrawerView>{
             ListTile(
               leading: Icon(Icons.verified_user),
               title: Text('Profile'),
-              onTap: () => {Navigator.of(context).pop()},
+              onTap: () => {
+                Navigator.push(context,  MaterialPageRoute(
+                    builder: (context){
+                      return ProfileView();
+                    })
+                )
+              },
             ),
 
             ListTile(
