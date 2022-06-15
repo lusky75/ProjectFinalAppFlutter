@@ -97,6 +97,14 @@ class FirestoreHelper{
     fire_articles.add(map);
   }
 
+  updateArticle(String article_id , Map<String,dynamic> map){
+    fire_articles.doc(article_id).update(map);
+  }
+
+  deleteArticle(String id) {
+    fire_articles.doc(id).delete();
+  }
+
 
 
 

@@ -15,9 +15,24 @@ class CreateArticleView extends StatefulWidget {
 }
 
 class CreateArticleViewState extends State<CreateArticleView> {
+  String article_id = "";
   String title = "";
   String description = "";
   DateTime created_at = DateTime.now();
+
+  final _myArticleTitleController = TextEditingController();
+  final _myArticleDescriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    article_id = selectedArticle.id;
+    title = selectedArticle.title;
+    description = selectedArticle.description;
+
+    _myArticleTitleController.text = title;
+    _myArticleDescriptionController.text = description;
+  }
 
   //Functions
   createArticle(){
@@ -32,7 +47,19 @@ class CreateArticleViewState extends State<CreateArticleView> {
       //Par exemple une perte de connexion
       print(error);
     });
+  }
 
+  updateArticle() {
+    Map<String,dynamic> map = {
+      "TITLE": title,
+      "DESCRIPTION": description,
+    };
+    FirestoreHelper().updateArticle(article_id, map);
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context){
+          return ArticlesView();
+        }
+    ));
   }
 
   @override
@@ -53,7 +80,8 @@ class CreateArticleViewState extends State<CreateArticleView> {
                     setState(() {
                       title = value;
                     });
-                  }
+                  },
+                  controller: _myArticleTitleController,
                 ),
                 Text("Description"),
                 Card(
@@ -66,6 +94,7 @@ class CreateArticleViewState extends State<CreateArticleView> {
                             description = value;
                           });
                         },
+                        controller: _myArticleDescriptionController,
                         maxLines: 8, //or null
                         decoration: InputDecoration.collapsed(hintText: "Enter your text here"),
                       ),
@@ -76,7 +105,11 @@ class CreateArticleViewState extends State<CreateArticleView> {
                     if (title.length == 0 && description.length == 0) {
                       return;
                     }
-                    await createArticle();
+                    if (article_id != "") {
+                      await updateArticle();
+                    } else {
+                      await createArticle();
+                    }
                   },
                   icon: Icon( // <-- Icon
                     Icons.edit,

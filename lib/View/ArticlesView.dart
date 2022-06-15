@@ -44,6 +44,7 @@ class ArticlesViewState extends State<ArticlesView> {
                       onPressed: () {
                         Navigator.push(context,  MaterialPageRoute(
                             builder: (context){
+                              selectedArticle = ArticleModel.empty();
                               return CreateArticleView();
                             })
                         );
@@ -86,11 +87,15 @@ class ArticlesViewState extends State<ArticlesView> {
                     ArticleModel article = ArticleModel(documents[index]);
                     if (GlobalUser.id == article.user_uid)
                     {
+
                       return Dismissible(
 
                           direction: DismissDirection.endToStart,
                           onDismissed: (DismissDirection direction) {
-                            FirestoreHelper().deleteUser(article.id);
+                            /*
+                            Delete the article when the card is dismissed from right to left
+                             */
+                            FirestoreHelper().deleteArticle(article.id);
                           },
                           key: Key(article.id),
                           child: Column(children: [
@@ -101,6 +106,12 @@ class ArticlesViewState extends State<ArticlesView> {
                                   borderRadius: BorderRadius.circular(10)),
                               child: ListTile(
                                 onTap: () {
+                                  Navigator.push(context,  MaterialPageRoute(
+                                      builder: (context){
+                                        selectedArticle = article;
+                                        return CreateArticleView();
+                                      })
+                                  );
                                 },
                                 title: Text(article.title),
                                 subtitle: Text(article.description),

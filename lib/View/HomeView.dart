@@ -51,14 +51,7 @@ class HomeViewState extends State<HomeView>{
               itemCount: documents.length,
               itemBuilder: (context,index){
                 ArticleModel article = ArticleModel(documents[index]);
-                  return Dismissible(
-
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (DismissDirection direction){
-                      FirestoreHelper().deleteUser(article.id);
-                    },
-                    key: Key(article.id),
-                    child: Column(children: [
+                  return Column(children: [
                       Card(
                         elevation: 10,
                         color: Colors.white,
@@ -86,8 +79,7 @@ class HomeViewState extends State<HomeView>{
                               Text("${getArticleDateFormat(article.created_at)} by ${article.author_pseudo}")
                           )
                       )
-                    ],)
-                  );
+                    ],);
               },
             );
           }
