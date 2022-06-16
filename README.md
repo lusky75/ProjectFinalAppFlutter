@@ -20,7 +20,7 @@ Le menu peut naviguer vers les pages:
 - Mes favoris (affichant toutes les annonces que l'utilisateur a mis en favoris)
 
 - Mon profil pour afficher les données de l'utilisateur
-  L'utilisateur peut modifier son profil, et son mot de passe
+  L'utilisateur peut modifier son profil
 
 - Bouton Settings (rien pour l'instant)
 - Bouton Logout (mets à vide l'utilisateur et navigue vers la page de Login --> MyApp)
