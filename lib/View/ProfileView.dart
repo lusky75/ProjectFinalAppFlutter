@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:projet_final_app_flutter/Model/UserModel.dart';
 import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
 import 'package:intl/intl.dart';
 
 import 'CreateAnnouncementView.dart';
+import 'ProfileFormView.dart';
 
 class ProfileView extends StatefulWidget {
   @override
@@ -16,6 +19,25 @@ class ProfileView extends StatefulWidget {
 }
 
 class ProfileViewState extends State<ProfileView> {
+  String lastname = "";
+  String firstname = "";
+  String pseudo = "";
+  String email = "";
+
+  initState() {
+    updateUserProfileState();
+  }
+
+  void updateUserProfileState() async {
+    GlobalUser = await FirestoreHelper().getUser(GlobalUser.id);
+    setState(() {
+      lastname = GlobalUser.lastname;
+      firstname = GlobalUser.firstname;
+      pseudo = GlobalUser.pseudo ?? "";
+      email = GlobalUser.email;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -35,7 +57,7 @@ class ProfileViewState extends State<ProfileView> {
           child:
           Column(children: [
             SizedBox(height: 20),
-            Text("${GlobalUser.firstname}, ${GlobalUser.lastname}",
+            Text("${firstname}, ${lastname}",
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 25,
@@ -43,18 +65,18 @@ class ProfileViewState extends State<ProfileView> {
               )
             ),
             SizedBox(height: 20),
-            Text("Pseudo: ${GlobalUser.pseudo}"),
+            Text("Pseudo: ${pseudo}"),
             SizedBox(height: 20),
-            Text("Email: ${GlobalUser.email}"),
+            Text("Email: ${email}"),
             SizedBox(height: 20),
             Text("Account created: ${getArticleDateFormat(GlobalUser.created_at)}"),
 
-            /*
+
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(context,  MaterialPageRoute(
                     builder: (context){
-                      return  //ProfileFormView();
+                      return ProfileFormView();
                     })
                 );
               },
@@ -65,7 +87,7 @@ class ProfileViewState extends State<ProfileView> {
               label: Text('Edit my profile'), // <-- Text
             ),
 
-             */
+
           ])
         )
     );

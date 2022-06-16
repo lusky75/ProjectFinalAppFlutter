@@ -173,6 +173,7 @@ class CreateAnnouncementViewState extends State<CreateAnnouncementView> {
                   controller: _myAnnouncementPriceController,
                 ),
                 SizedBox(height: 20),
+
                 ElevatedButton.icon(
                   onPressed: () async {
                     /**

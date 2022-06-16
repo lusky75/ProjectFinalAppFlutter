@@ -17,6 +17,7 @@ class AnnouncementsView extends StatefulWidget {
 class AnnouncementsViewState extends State<AnnouncementsView> {
 
   String dropdownValue = 'Sort: Newest';
+  bool announcementOrderByNewest = true;
 
   @override
   Widget build(BuildContext context) {
@@ -81,11 +82,7 @@ class AnnouncementsViewState extends State<AnnouncementsView> {
       onChanged: (String? newValue) {
         setState(() {
           dropdownValue = newValue!;
-          if (newValue == 'Sort: Newest') {
-            print("sort newest");
-          } else {
-            print("sort oldest  ");
-          }
+          announcementOrderByNewest = !announcementOrderByNewest;
         });
       },
       items: <String>['Sort: Newest', 'Sort: Oldest']
@@ -106,7 +103,7 @@ class AnnouncementsViewState extends State<AnnouncementsView> {
   Widget bodyPage(){
     return StreamBuilder<QuerySnapshot>(
       //On cherche tous les documentssnpshots de l'utilisateur dans la bdd
-        stream: FirestoreHelper().fire_announcements.snapshots(),
+        stream: FirestoreHelper().fire_announcements.orderBy('CREATED_AT', descending: announcementOrderByNewest).snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData){
             // Il n'y aucune donnée dans la BDD

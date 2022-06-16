@@ -105,12 +105,8 @@ class FirestoreHelper {
     fire_announcements.doc(id).delete();
   }
 
-
-
-
-
-
-
-
-
+  Future<String> getUserPseudoFromAnnouncement(String uid) async {
+    DocumentSnapshot snapshot = await fire_users.doc(uid).get();
+    return UserModel(snapshot).pseudo ?? "";
+  }
 }

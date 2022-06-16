@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/Model/AnnouncementModel.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
 import 'package:intl/intl.dart';
+
+import '../Model/UserModel.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -16,7 +19,9 @@ class HomeView extends StatefulWidget {
 class HomeViewState extends State<HomeView>{
   final dateformat = new DateFormat('yyyy-MM-dd hh:mm');
   String dropdownValue = 'Sort: Newest';
-  bool announcementOrderBy = false;
+  bool announcementOrderByNewest = true;
+
+  UserModel userModel = UserModel.empty();
 
   @override
   Widget build(BuildContext context){
@@ -55,10 +60,12 @@ class HomeViewState extends State<HomeView>{
       onChanged: (String? newValue) {
         setState(() {
           dropdownValue = newValue!;
-          announcementOrderBy = !announcementOrderBy;
+          announcementOrderByNewest = !announcementOrderByNewest;
+
         });
       },
       items: <String>['Sort: Newest', 'Sort: Oldest']
+
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
@@ -70,7 +77,7 @@ class HomeViewState extends State<HomeView>{
 
   Widget bodyPage(){
     return StreamBuilder<QuerySnapshot>(
-        stream: FirestoreHelper().fire_announcements.orderBy('CREATED_AT', descending: announcementOrderBy).snapshots(),
+        stream: FirestoreHelper().fire_announcements.orderBy('CREATED_AT', descending: announcementOrderByNewest).snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData){
             // Il n'y aucune donnée dans la BDD
@@ -84,36 +91,48 @@ class HomeViewState extends State<HomeView>{
               itemCount: documents.length,
               itemBuilder: (context,index){
                 AnnouncementModel article = AnnouncementModel(documents[index]);
-                  return Column(children: [
-                      Card(
-                        elevation: 10,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: ListTile(
-                          onTap: () {
-                            //Détail de l'utilisateur
 
-                          },
-                          title: Text(article.title),
-                          subtitle: Text(article.description),
-                          trailing: Text("${article.price} €"),
-                          //leading: Image.network(user.avatar!),
+                  return FutureBuilder(
+                    future: FirestoreHelper().getUserPseudoFromAnnouncement(article.user_uid),
+                    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      String author_pseudo = "";
+                      if (snapshot.data == null) {
+                        author_pseudo = article.author_pseudo;
+                      } else {
+                        author_pseudo = snapshot.data.toString();
+                      }
+                      return Column(children: [
+                        Card(
+                          elevation: 10,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: ListTile(
+                            onTap: () {
+                              //Détail de l'utilisateur
 
-                          //leading: Text("${article.created_at}"),
+                            },
+                            title: Text(article.title),
+                            subtitle: Text(article.description),
+                            trailing: Text("${article.price} €"),
+                            //leading: Image.network(user.avatar!),
+
+                            //leading: Text("${article.created_at}"),
+                          ),
+
                         ),
-
-                      ),
-                      Align
-                        (
-                          alignment: Alignment.bottomRight,
-                          child:
-                          Padding(padding: const EdgeInsets.all(10) ,
-                              child:
-                              Text("${getArticleDateFormat(article.created_at)} by ${article.author_pseudo}")
-                          )
-                      )
-                    ],);
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Text("${getArticleDateFormat(
+                                    article.created_at)} by "
+                                    "${author_pseudo}")
+                            )
+                        )
+                      ],);
+                    }
+                  );
               },
             );
           }

@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:projet_final_app_flutter/View/AnnouncementsView.dart';
-import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/services.dart';
+
+import 'ProfileView.dart';
 
 class ProfileFormView extends StatefulWidget {
   @override
@@ -51,13 +48,16 @@ class ProfileFormViewState extends State<ProfileFormView> {
   /**
    * Update user profile's data from map's parameters then navigate to ProfileView()
    */
-  updateAnnouncement() {
+  updateProfile() async {
+    print("user content: ${user_id} ${lastname} ${firstname} ${email} ${pseudo}");
+
     Map<String,dynamic> map = {
-      "TITLE": title,
-      "DESCRIPTION": description,
-      "PRICE": price
+      "LASTNAME": lastname,
+      "FIRSTNAME": firstname,
+      "EMAIL": email,
+      "PSEUDO": pseudo,
     };
-    FirestoreHelper().updateAnnouncement(announcement_id, map);
+    await FirestoreHelper().updateUser(user_id, map);
     Navigator.push(context, MaterialPageRoute(
         builder: (context){
           return ProfileView();
@@ -97,7 +97,7 @@ class ProfileFormViewState extends State<ProfileFormView> {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title : const Text("Create your article"),
+          title : const Text("Update your profile"),
           backgroundColor: Colors.black38,
         ),
         body: Center(
@@ -105,61 +105,68 @@ class ProfileFormViewState extends State<ProfileFormView> {
             Column(
               children: <Widget>[
                 SizedBox(height: 20),
-                Text("Title"),
+                Text("Pseudo"),
                 TextField(
                   decoration: InputDecoration(
-                      hintText : "Enter your title here",
+                      hintText : "Update your pseudo here",
                       border : OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)
                       )
                   ),
                   onChanged : (String value) {
                     setState(() {
-                      title = value;
+                      pseudo = value;
                     });
                   },
-                  controller: _myAnnouncementTitleController,
+                  controller: _myProfilePseudoController,
                 ),
                 SizedBox(height: 20),
-                Text("Description"),
-                Card(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: TextField(
-
-                        onChanged : (String value) {
-                          setState(() {
-                            description = value;
-                          });
-                        },
-                        controller: _myAnnouncementDescriptionController,
-                        maxLines: 8, //or null
-                        decoration : InputDecoration(
-                            hintText : "Enter your description here",
-                            border : OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)
-                            )
-                        ),
-                      ),
-                    )
-                ),
-                SizedBox(height: 20),
-                Text("Price"),
-                TextFormField(
-                  decoration : InputDecoration(
-                      hintText : "Enter the price",
+                Text("Firstname"),
+                TextField(
+                  decoration: InputDecoration(
+                      hintText : "Update your firstname here",
                       border : OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)
                       )
                   ),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   onChanged : (String value) {
                     setState(() {
-                      price = double.parse(value);
+                      firstname = value;
                     });
                   },
-                  controller: _myAnnouncementPriceController,
+                  controller: _myProfileFirstnameController,
+                ),
+                SizedBox(height: 20),
+                Text("Lastname"),
+                TextField(
+                  decoration: InputDecoration(
+                      hintText : "Update your lastname here",
+                      border : OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)
+                      )
+                  ),
+                  onChanged : (String value) {
+                    setState(() {
+                      lastname = value;
+                    });
+                  },
+                  controller: _myProfileLastnameController,
+                ),
+                SizedBox(height: 20),
+                Text("Email"),
+                TextField(
+                  decoration: InputDecoration(
+                      hintText : "Update your email here",
+                      border : OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)
+                      )
+                  ),
+                  onChanged : (String value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                  controller: _myProfileEmailController,
                 ),
                 SizedBox(height: 20),
                 ElevatedButton.icon(
@@ -169,25 +176,17 @@ class ProfileFormViewState extends State<ProfileFormView> {
                      * If announcement_id is not empty, it must update the announcement
                      * Else it creates a new one.
                      */
-                    if (title.length == 0 || description.length == 0) {
-                      _showMyDialog("Empty fields", "Title and Description fields must not be empty");
+                    if (lastname.length == 0 || firstname.length == 0 || pseudo.length == 0 || email.length == 0) {
+                      _showMyDialog("Empty fields", "Firstname, Lastname, Email and Pseudo fields must not be empty");
                       return;
                     }
-                    if (price == 0) {
-                      _showMyDialog("Error fields", "Price field must be numeric or decimal");
-                      return;
-                    }
-                    if (announcement_id != "") {
-                      await updateAnnouncement();
-                    } else {
-                      await createAnnouncement();
-                    }
+                    await updateProfile();
                   },
                   icon: Icon( // <-- Icon
                     Icons.edit,
                     size: 24.0,
                   ),
-                  label: Text('Submit the article'),
+                  label: Text('Submit the update'),
                 ),
               ],
             )
