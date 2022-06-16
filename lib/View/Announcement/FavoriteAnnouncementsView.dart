@@ -18,7 +18,6 @@ class FavoriteAnnouncementsView extends StatefulWidget {
 
 class FavoriteAnnouncementsViewState extends State<FavoriteAnnouncementsView> {
 
-  String dropdownValue = 'Sort: Newest';
   bool announcementOrderByNewest = true;
 
   @override
@@ -39,9 +38,8 @@ class FavoriteAnnouncementsViewState extends State<FavoriteAnnouncementsView> {
         body:
         SafeArea(child:
         Stack(children: [
-          Padding(padding: EdgeInsets.all(20), child: dropdownSelectButton()),
 
-          Padding(padding: EdgeInsets.only(top: 60), child: bodyPage()),
+          Padding(padding: EdgeInsets.only(top: 20), child: bodyPage()),
 
           Align
             (
@@ -68,32 +66,6 @@ class FavoriteAnnouncementsViewState extends State<FavoriteAnnouncementsView> {
           )
         ],),
         )
-    );
-  }
-
-  Widget dropdownSelectButton() {
-    return DropdownButton<String>(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
-      elevation: 16,
-      style: const TextStyle(color: Colors.blueGrey),
-      underline: Container(
-        height: 2,
-        color: Colors.blueAccent,
-      ),
-      onChanged: (String? newValue) {
-        setState(() {
-          dropdownValue = newValue!;
-          announcementOrderByNewest = !announcementOrderByNewest;
-        });
-      },
-      items: <String>['Sort: Newest', 'Sort: Oldest']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
     );
   }
 
