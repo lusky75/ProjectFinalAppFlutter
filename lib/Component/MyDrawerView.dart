@@ -56,7 +56,6 @@ class MyDrawerViewState extends  State<MyDrawerView>{
                 ),
               ),
               onTap: (){
-                print("Clicked on image");
                 pickImage();
               },
             ),

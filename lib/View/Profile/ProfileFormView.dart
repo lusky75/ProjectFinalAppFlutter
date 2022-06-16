@@ -49,8 +49,6 @@ class ProfileFormViewState extends State<ProfileFormView> {
    * Update user profile's data from map's parameters then navigate to ProfileView()
    */
   updateProfile() async {
-    print("user content: ${user_id} ${lastname} ${firstname} ${email} ${pseudo}");
-
     Map<String,dynamic> map = {
       "LASTNAME": lastname,
       "FIRSTNAME": firstname,

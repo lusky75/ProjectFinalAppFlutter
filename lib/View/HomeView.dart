@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/Model/AnnouncementModel.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
@@ -88,13 +89,14 @@ class HomeViewState extends State<HomeView>{
                     padding: EdgeInsets.all(20),
                     itemCount: documents.length,
                     itemBuilder: (context,index){
-                        AnnouncementModel article = AnnouncementModel(documents[index]);
+                        AnnouncementModel announcement = AnnouncementModel(documents[index]);
                         return FutureBuilder(
-                            future: FirestoreHelper().getUserPseudoFromAnnouncement(article.user_uid),
+                            future: FirestoreHelper().getUserPseudoFromAnnouncement(announcement.user_uid),
                             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                                 String author_pseudo = "";
+                                bool isFavorite = false;
                                 if (!snapshot.hasData) {
-                                    author_pseudo = article.author_pseudo;
+                                    author_pseudo = announcement.author_pseudo;
                                 } else {
                                     author_pseudo = snapshot.data.toString();
                                 }
@@ -107,24 +109,39 @@ class HomeViewState extends State<HomeView>{
                                         child: ListTile(
                                           onTap: () {
                                           },
-                                          title: Text(article.title),
-                                          subtitle: Text(article.description),
-                                          trailing: Text("${article.price} €"),
+                                          title: Text(announcement.title),
+                                          subtitle: Text(announcement.description),
+                                          trailing: Text("${announcement.price} €"),
                                         ),
                                     ),
-                                    IconButton(
-                                      icon: const Icon(Icons.favorite),
-                                      color: Colors.red,
-                                      onPressed: () {
-                                          FirestoreHelper().createFavorite(article.id, GlobalUser.id);
+                                    FavoriteButton(
+                                      valueChanged: (_isFavorite) {
+                                        if (_isFavorite) {
+                                          FirestoreHelper().createFavorite(announcement.id, GlobalUser.id);
+                                        } else {
+                                          FirestoreHelper().deleteFavoriteAnnouncement(announcement.id, GlobalUser.id);
+                                        }
                                       },
                                     ),
+                                  /*
+                                    IconButton(
+                                      icon: const Icon(Icons.favorite),
+                                      color: (isFavorite) ? Colors.red: Colors.black,
+                                      onPressed: () {
+                                          setState(() {
+                                            isFavorite = true;
+                                          });
+                                          FirestoreHelper().createFavorite(announcement.id, GlobalUser.id);
+                                      },
+                                    ),
+
+                                   */
                                     Align(
                                         alignment: Alignment.bottomRight,
                                         child: Padding(
                                             padding: const EdgeInsets.all(10),
                                             child: Text("${getArticleDateFormat(
-                                                article.created_at)} by "
+                                                announcement.created_at)} by "
                                                 "${author_pseudo}")
                                         )
                                     )

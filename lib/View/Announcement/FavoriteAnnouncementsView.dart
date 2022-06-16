@@ -121,7 +121,6 @@ class FavoriteAnnouncementsViewState extends State<FavoriteAnnouncementsView> {
                   itemCount: documents.length,
                   itemBuilder: (context,index) {
                     FavoriteModel favorite = FavoriteModel(documents[index]);
-                    print("1. ${favorite.user_uid}");
 
                     return FutureBuilder(
                         future: FirestoreHelper().getFavoriteAnnouncements(favorite.user_uid, favorite.announcement_id),
