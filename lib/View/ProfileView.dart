@@ -5,6 +5,8 @@ import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
 import 'package:intl/intl.dart';
 
+import 'CreateAnnouncementView.dart';
+
 class ProfileView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -45,7 +47,25 @@ class ProfileViewState extends State<ProfileView> {
             SizedBox(height: 20),
             Text("Email: ${GlobalUser.email}"),
             SizedBox(height: 20),
-            Text("Account created: ${getArticleDateFormat(GlobalUser.created_at)}")
+            Text("Account created: ${getArticleDateFormat(GlobalUser.created_at)}"),
+
+            /*
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(context,  MaterialPageRoute(
+                    builder: (context){
+                      return  //ProfileFormView();
+                    })
+                );
+              },
+              icon: Icon( // <-- Icon
+                Icons.edit,
+                size: 24.0,
+              ),
+              label: Text('Edit my profile'), // <-- Text
+            ),
+
+             */
           ])
         )
     );

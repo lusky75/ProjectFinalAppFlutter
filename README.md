@@ -1,7 +1,5 @@
 # ProjectFinalAppFlutter
 
-Le projet se lance en iOS.
-
 Au lancement du projet, la page main contient un login et un register.
 
 Lorsque l'utilisateur se connecte, il accède à la page Home, à sa gauche il y a:
@@ -11,8 +9,8 @@ Le menu peut naviguer vers les pages:
 - Mes annonces (affichant toutes les annonces de l'utilisateur connecté):
 
   L'utilisateur pourra créer une annonce et mettre à jour une annonce sélectionnée:
-  3 champs (title, description et price)
-  si les champs sont vides ou si le champ price n'est pas numeric (affiche une popup d'erreur suivi d'un message)
+    Navigue vers une nouvelle page contenant 3 champs (title, description et price)
+    Si les champs sont vides ou si le champ price n'est pas numérique (affiche une popup d'erreur suivi d'un message)
 
   Pour supprimer une annonce, il suffit de balayer l'annonce sélectionnée de la droite vers la gauche.
 

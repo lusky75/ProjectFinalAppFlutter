@@ -16,6 +16,7 @@ class HomeView extends StatefulWidget {
 class HomeViewState extends State<HomeView>{
   final dateformat = new DateFormat('yyyy-MM-dd hh:mm');
   String dropdownValue = 'Sort: Newest';
+  bool announcementOrderBy = false;
 
   @override
   Widget build(BuildContext context){
@@ -54,11 +55,7 @@ class HomeViewState extends State<HomeView>{
       onChanged: (String? newValue) {
         setState(() {
           dropdownValue = newValue!;
-          if (newValue == 'Sort: Newest') {
-            print("sort newest");
-          } else {
-            print("sort oldest  ");
-          }
+          announcementOrderBy = !announcementOrderBy;
         });
       },
       items: <String>['Sort: Newest', 'Sort: Oldest']
@@ -73,8 +70,7 @@ class HomeViewState extends State<HomeView>{
 
   Widget bodyPage(){
     return StreamBuilder<QuerySnapshot>(
-      //On cherche tous les documentssnpshots de l'utilisateur dans la bdd
-        stream: FirestoreHelper().fire_announcements.snapshots(),
+        stream: FirestoreHelper().fire_announcements.orderBy('CREATED_AT', descending: announcementOrderBy).snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData){
             // Il n'y aucune donnée dans la BDD

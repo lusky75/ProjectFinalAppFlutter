@@ -7,60 +7,49 @@ import 'package:projet_final_app_flutter/Services/librairies.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
-class CreateAnnouncementView extends StatefulWidget {
+class ProfileFormView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return CreateAnnouncementViewState();
+    return ProfileFormViewState();
   }
 }
 
-class CreateAnnouncementViewState extends State<CreateAnnouncementView> {
-  String announcement_id = "";
-  String title = "";
-  double price = 0;
-  String description = "";
+class ProfileFormViewState extends State<ProfileFormView> {
+  String user_id = "";
+  String lastname = "";
+  String firstname = "";
+  String pseudo = "";
+  String email = "";
   DateTime created_at = DateTime.now();
 
   /**
    * Those controllers are used to fill TextFields' content at initState()
    */
-  final _myAnnouncementTitleController = TextEditingController();
-  final _myAnnouncementDescriptionController = TextEditingController();
-  final _myAnnouncementPriceController = TextEditingController();
+  final _myProfileLastnameController = TextEditingController();
+  final _myProfileFirstnameController = TextEditingController();
+  final _myProfileEmailController = TextEditingController();
+  final _myProfilePseudoController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    announcement_id = selectedAnnouncement.id;
-    title = selectedAnnouncement.title;
-    description = selectedAnnouncement.description;
-    price = selectedAnnouncement.price;
+    user_id = GlobalUser.id;
 
-    _myAnnouncementTitleController.text = title;
-    _myAnnouncementDescriptionController.text = description;
-    _myAnnouncementPriceController.text = price.toString();
+    lastname = GlobalUser.lastname;
+    firstname = GlobalUser.firstname;
+    pseudo = GlobalUser.pseudo ?? "";
+    email = GlobalUser.email;
+
+    _myProfileLastnameController.text = lastname;
+    _myProfileFirstnameController.text = firstname;
+    _myProfileEmailController.text = email;
+    _myProfilePseudoController.text = pseudo;
   }
 
-  /**
-   * Create announcement then navigate to ArticlesView()
-   */
-  createAnnouncement(){
-    FirestoreHelper().createAnnouncement(title, description, price, created_at, GlobalUser.pseudo ?? "", GlobalUser.id).then((value){
-      Navigator.push(context, MaterialPageRoute(
-          builder: (context){
-            return AnnouncementsView();
-          }
-      ));
-
-    }).catchError((error){
-      //Par exemple une perte de connexion
-      print(error);
-    });
-  }
 
   /**
-   * Update article's data from map's parameters then navigate to ArticlesView()
+   * Update user profile's data from map's parameters then navigate to ProfileView()
    */
   updateAnnouncement() {
     Map<String,dynamic> map = {
@@ -71,7 +60,7 @@ class CreateAnnouncementViewState extends State<CreateAnnouncementView> {
     FirestoreHelper().updateAnnouncement(announcement_id, map);
     Navigator.push(context, MaterialPageRoute(
         builder: (context){
-          return AnnouncementsView();
+          return ProfileView();
         }
     ));
   }

@@ -51,7 +51,7 @@ class AnnouncementsViewState extends State<AnnouncementsView> {
                         Navigator.push(context,  MaterialPageRoute(
                             builder: (context){
                               selectedAnnouncement = AnnouncementModel.empty();
-                              return CreateArticleView();
+                              return CreateAnnouncementView();
                             })
                         );
                       },
@@ -147,7 +147,7 @@ class AnnouncementsViewState extends State<AnnouncementsView> {
                                   Navigator.push(context,  MaterialPageRoute(
                                       builder: (context){
                                         selectedAnnouncement = article;
-                                        return CreateArticleView();
+                                        return CreateAnnouncementView();
                                       })
                                   );
                                 },
