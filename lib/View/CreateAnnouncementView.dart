@@ -35,6 +35,7 @@ class CreateArticleViewState extends State<CreateArticleView> {
     announcement_id = selectedAnnouncement.id;
     title = selectedAnnouncement.title;
     description = selectedAnnouncement.description;
+    price = selectedAnnouncement.price;
 
     _myAnnouncementTitleController.text = title;
     _myAnnouncementDescriptionController.text = description;
@@ -65,6 +66,7 @@ class CreateArticleViewState extends State<CreateArticleView> {
     Map<String,dynamic> map = {
       "TITLE": title,
       "DESCRIPTION": description,
+      "PRICE": price
     };
     FirestoreHelper().updateAnnouncement(announcement_id, map);
     Navigator.push(context, MaterialPageRoute(
@@ -72,6 +74,33 @@ class CreateArticleViewState extends State<CreateArticleView> {
           return AnnouncementsView();
         }
     ));
+  }
+
+  Future<void> _showMyDialog(String title, String description) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(description),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -86,8 +115,15 @@ class CreateArticleViewState extends State<CreateArticleView> {
             child:
             Column(
               children: <Widget>[
+                SizedBox(height: 20),
                 Text("Title"),
                 TextField(
+                  decoration: InputDecoration(
+                      hintText : "Enter your title here",
+                      border : OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)
+                      )
+                  ),
                   onChanged : (String value) {
                     setState(() {
                       title = value;
@@ -95,12 +131,14 @@ class CreateArticleViewState extends State<CreateArticleView> {
                   },
                   controller: _myAnnouncementTitleController,
                 ),
+                SizedBox(height: 20),
                 Text("Description"),
                 Card(
                     color: Colors.white,
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(5.0),
                       child: TextField(
+
                         onChanged : (String value) {
                           setState(() {
                             description = value;
@@ -108,21 +146,33 @@ class CreateArticleViewState extends State<CreateArticleView> {
                         },
                         controller: _myAnnouncementDescriptionController,
                         maxLines: 8, //or null
-                        decoration: InputDecoration.collapsed(hintText: "Enter your description here"),
+                        decoration : InputDecoration(
+                            hintText : "Enter your description here",
+                            border : OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)
+                            )
+                        ),
                       ),
                     )
                 ),
+                SizedBox(height: 20),
                 Text("Price"),
                 TextFormField(
+                  decoration : InputDecoration(
+                      hintText : "Enter the price",
+                      border : OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)
+                      )
+                  ),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   onChanged : (String value) {
                     setState(() {
-                      print("ok");
                       price = double.parse(value);
                     });
                   },
                   controller: _myAnnouncementPriceController,
                 ),
+                SizedBox(height: 20),
                 ElevatedButton.icon(
                   onPressed: () async {
                     /**
@@ -130,7 +180,12 @@ class CreateArticleViewState extends State<CreateArticleView> {
                      * If announcement_id is not empty, it must update the announcement
                      * Else it creates a new one.
                      */
-                    if (title.length == 0 && description.length == 0) {
+                    if (title.length == 0 || description.length == 0) {
+                      _showMyDialog("Empty fields", "Title and Description fields must not be empty");
+                      return;
+                    }
+                    if (price == 0) {
+                      _showMyDialog("Error fields", "Price field must be numeric or decimal");
                       return;
                     }
                     if (announcement_id != "") {

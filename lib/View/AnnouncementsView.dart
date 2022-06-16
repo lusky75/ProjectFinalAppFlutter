@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Model/AnnouncementModel.dart';
-import 'package:projet_final_app_flutter/View/CreateArticleView.dart';
+import 'package:projet_final_app_flutter/View/CreateAnnouncementView.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
 
 class AnnouncementsView extends StatefulWidget {
@@ -15,6 +15,9 @@ class AnnouncementsView extends StatefulWidget {
 }
 
 class AnnouncementsViewState extends State<AnnouncementsView> {
+
+  String dropdownValue = 'Sort: Newest';
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -27,13 +30,16 @@ class AnnouncementsViewState extends State<AnnouncementsView> {
       ),
 
       appBar : AppBar(
-        title : const Text("My articles"),
+        title : const Text("My announcements"),
         backgroundColor: Colors.black38,
       ),
       body:
         SafeArea(child:
           Stack(children: [
-            bodyPage(),
+            Padding(padding: EdgeInsets.all(20), child: dropdownSelectButton()),
+
+            Padding(padding: EdgeInsets.only(top: 60), child: bodyPage()),
+
             Align
               (
               alignment: Alignment.bottomRight,
@@ -59,6 +65,36 @@ class AnnouncementsViewState extends State<AnnouncementsView> {
               )
           ],),
         )
+    );
+  }
+
+  Widget dropdownSelectButton() {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Colors.blueGrey),
+      underline: Container(
+        height: 2,
+        color: Colors.blueAccent,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          dropdownValue = newValue!;
+          if (newValue == 'Sort: Newest') {
+            print("sort newest");
+          } else {
+            print("sort oldest  ");
+          }
+        });
+      },
+      items: <String>['Sort: Newest', 'Sort: Oldest']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 

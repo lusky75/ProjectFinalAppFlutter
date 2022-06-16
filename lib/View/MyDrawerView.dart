@@ -126,7 +126,7 @@ class MyDrawerViewState extends  State<MyDrawerView>{
 
             ListTile(
               leading: Icon(Icons.verified_user),
-              title: Text('Profile'),
+              title: Text('My profile'),
               onTap: () => {
                 Navigator.push(context,  MaterialPageRoute(
                     builder: (context){

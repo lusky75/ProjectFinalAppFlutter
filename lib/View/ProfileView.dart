@@ -26,12 +26,13 @@ class ProfileViewState extends State<ProfileView> {
         ),
 
         appBar: AppBar(
-          title : const Text("Mon profil"),
+          title : const Text("My profile"),
           backgroundColor: Colors.black38,
         ),
         body: Center(
           child:
           Column(children: [
+            SizedBox(height: 20),
             Text("${GlobalUser.firstname}, ${GlobalUser.lastname}",
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
@@ -39,9 +40,12 @@ class ProfileViewState extends State<ProfileView> {
                   fontWeight: FontWeight.bold
               )
             ),
-            Text("${GlobalUser.pseudo}"),
-            Text("${GlobalUser.email}"),
-            Text("${GlobalUser.created_at}")
+            SizedBox(height: 20),
+            Text("Pseudo: ${GlobalUser.pseudo}"),
+            SizedBox(height: 20),
+            Text("Email: ${GlobalUser.email}"),
+            SizedBox(height: 20),
+            Text("Account created: ${getArticleDateFormat(GlobalUser.created_at)}")
           ])
         )
     );

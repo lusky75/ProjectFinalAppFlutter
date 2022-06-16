@@ -15,6 +15,7 @@ class HomeView extends StatefulWidget {
 
 class HomeViewState extends State<HomeView>{
   final dateformat = new DateFormat('yyyy-MM-dd hh:mm');
+  String dropdownValue = 'Sort: Newest';
 
   @override
   Widget build(BuildContext context){
@@ -31,7 +32,42 @@ class HomeViewState extends State<HomeView>{
           backgroundColor: Colors.black38,
         ),
         backgroundColor: Colors.white,
-        body : bodyPage()
+        body : SafeArea(child:
+          Stack(children: [
+            Padding(padding: EdgeInsets.all(20), child: dropdownSelectButton()),
+            Padding(padding: EdgeInsets.only(top: 60), child: bodyPage()),]
+          )
+        )
+    );
+  }
+
+  Widget dropdownSelectButton() {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Colors.blueGrey),
+      underline: Container(
+        height: 2,
+        color: Colors.blueAccent,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          dropdownValue = newValue!;
+          if (newValue == 'Sort: Newest') {
+            print("sort newest");
+          } else {
+            print("sort oldest  ");
+          }
+        });
+      },
+      items: <String>['Sort: Newest', 'Sort: Oldest']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 
@@ -45,6 +81,7 @@ class HomeViewState extends State<HomeView>{
             return const CircularProgressIndicator.adaptive();
           } else {
             List documents = snapshot.data!.docs;
+
             return ListView.builder(
               //gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
               padding: EdgeInsets.all(20),

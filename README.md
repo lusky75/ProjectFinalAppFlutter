@@ -1,12 +1,23 @@
 # ProjectFinalAppFlutter
 
-Le projet contient un login et un register.
-Lorsque l'utilisateur se connecte, il accède à la page Home, à sa gauche:
-Un menu permettant modifier sa photo de profil, ajouter son pseudo, et affiche son nom et prénom.
-Ce menu peut naviguer:
-- vers la page Home (affichant toutes les annonces des utilisateurs) 
-- vers la page Mes annonces (affichant toutes les annonces de l'utilisateur connecté), il pourra modifier
-le contenu en cliquant sur une annonce, créer une annonce en bas de la page
-- vers la page Mon profil pour afficher les données utilisateurs
-- Settings (rien pour l'instant)
-- Logout (mets à vide l'utilisateur et navigue vers la page de Login --> MyApp)
+Le projet se lance en iOS.
+
+Au lancement du projet, la page main contient un login et un register.
+
+Lorsque l'utilisateur se connecte, il accède à la page Home, à sa gauche il y a:
+Un menu permettant modifier sa photo de profil, ajouter son pseudo, et d'afficher son nom et prénom.
+Le menu peut naviguer vers les pages:
+- Home (affichant toutes les annonces des utilisateurs) 
+- Mes annonces (affichant toutes les annonces de l'utilisateur connecté):
+
+  L'utilisateur pourra créer une annonce et mettre à jour une annonce sélectionnée:
+  3 champs (title, description et price)
+  si les champs sont vides ou si le champ price n'est pas numeric (affiche une popup d'erreur suivi d'un message)
+
+  Pour supprimer une annonce, il suffit de balayer l'annonce sélectionnée de la droite vers la gauche.
+
+- Mon profil pour afficher les données utilisateurs
+- Bouton Settings (rien pour l'instant)
+- Bouton Logout (mets à vide l'utilisateur et navigue vers la page de Login --> MyApp)
+
+
