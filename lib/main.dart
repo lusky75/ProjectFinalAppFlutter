@@ -4,6 +4,7 @@ import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Services/global.dart';
 import 'package:projet_final_app_flutter/View/HomeView.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'Component/CustomAlertDialog.dart';
 import 'firebase_options.dart';
 
 
@@ -99,8 +100,8 @@ class _MyHomePageState extends State<MyHomePage> {
         //Choix pour l'utilisateur
         ToggleButtons(
           children: const [
-            Text("Inscription"),
-            Text("Connexion")
+            Text("Register"),
+            Text("Login")
           ],
           isSelected: selection,
           onPressed: (index) {
@@ -116,9 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 selection[1] = true;
                 isregister = false;
               });
-
             }
-
           },
         ),
 
@@ -134,17 +133,8 @@ class _MyHomePageState extends State<MyHomePage> {
               setState((){
                 lastname = value;
               });
-
-
-
-
             }
-
         ): Container(),
-
-
-
-
 
         (isregister) ? TextField(
             decoration : InputDecoration(
@@ -157,20 +147,9 @@ class _MyHomePageState extends State<MyHomePage> {
               setState((){
                 firstname = value;
               });
-
-
-
-
             }
 
         ): Container(),
-
-
-
-
-
-
-
 
         //Champs adresse mail
         const SizedBox(height : 10),
@@ -187,21 +166,12 @@ class _MyHomePageState extends State<MyHomePage> {
               setState((){
                 email = value;
               });
-
-
-
-
             }
 
         ),
 
-
-
         //champs mot de passe
-
         const SizedBox(height : 10),
-
-
         TextField(
             obscureText : true,
             decoration : InputDecoration(
@@ -228,18 +198,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
         ElevatedButton(
             onPressed : (){
-              if(isregister == true){
-                //fonction pour s'inscrire
-                inscription();
-              }
-              else{
-                // Fonction pour se connecter
-                connexion();
+              if (isregister == true) {
+                  if (lastname.length == 0 || firstname.length == 0 || email.length == 0 || password.length == 0 ) {
+                      _showMyDialog("Empty Fields", "");
+                      return;
+                  }
+                  registerRequest();
+              } else {
+                  if (email.length == 0 || password.length == 0 ) {
+                      _showMyDialog("Empty Fields", "");
+                      return;
+                  }
+                  loginRequest();
               }
 
 
             },
-            child : Text("Validation")
+            child : Text("Validate")
 
         )
 
@@ -247,9 +222,19 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<void> _showMyDialog(String title, String description) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return CustomAlertDialog(title, description);
+      },
+    );
+  }
+
 
   //Fonction
-  inscription(){
+  registerRequest(){
     FirestoreHelper().createUser(lastname, created_at, password, email, firstname).then((value){
       setState(() {
         isregister = !isregister;
@@ -263,16 +248,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     }).catchError((error){
-      //Par exemple une perte de connexion
-      print(error);
-
+      _showMyDialog("Error register", "${error}");
     });
 
   }
 
 
 
-  connexion(){
+  loginRequest(){
     FirestoreHelper().connectUser(email, password).then((value){
       Navigator.push(context, MaterialPageRoute(
           builder: (context){
@@ -282,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ));
 
     }).catchError((error){
-      //Afficher Pop connexion échoué
+      _showMyDialog("Error login", "${error}");
     });
 
   }

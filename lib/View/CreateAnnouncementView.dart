@@ -7,6 +7,8 @@ import 'package:projet_final_app_flutter/Services/librairies.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
+import '../Component/CustomAlertDialog.dart';
+
 class CreateAnnouncementView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -81,24 +83,7 @@ class CreateAnnouncementViewState extends State<CreateAnnouncementView> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(description),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        return CustomAlertDialog(title, description);
       },
     );
   }
