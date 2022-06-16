@@ -251,9 +251,13 @@ class _MyHomePageState extends State<MyHomePage> {
   //Fonction
   inscription(){
     FirestoreHelper().createUser(lastname, created_at, password, email, firstname).then((value){
+      setState(() {
+        isregister = !isregister;
+      });
+
       Navigator.push(context, MaterialPageRoute(
           builder: (context){
-            return HomeView();
+            return MyApp();
           }
       ));
 

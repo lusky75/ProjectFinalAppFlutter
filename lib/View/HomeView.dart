@@ -79,63 +79,55 @@ class HomeViewState extends State<HomeView>{
     return StreamBuilder<QuerySnapshot>(
         stream: FirestoreHelper().fire_announcements.orderBy('CREATED_AT', descending: announcementOrderByNewest).snapshots(),
         builder: (context, snapshot){
-          if(!snapshot.hasData){
-            // Il n'y aucune donnée dans la BDD
-            return const CircularProgressIndicator.adaptive();
-          } else {
-            List documents = snapshot.data!.docs;
-
-            return ListView.builder(
-              //gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              padding: EdgeInsets.all(20),
-              itemCount: documents.length,
-              itemBuilder: (context,index){
-                AnnouncementModel article = AnnouncementModel(documents[index]);
-
-                  return FutureBuilder(
-                    future: FirestoreHelper().getUserPseudoFromAnnouncement(article.user_uid),
-                    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                      String author_pseudo = "";
-                      if (snapshot.data == null) {
-                        author_pseudo = article.author_pseudo;
-                      } else {
-                        author_pseudo = snapshot.data.toString();
-                      }
-                      return Column(children: [
-                        Card(
-                          elevation: 10,
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: ListTile(
-                            onTap: () {
-                              //Détail de l'utilisateur
-
-                            },
-                            title: Text(article.title),
-                            subtitle: Text(article.description),
-                            trailing: Text("${article.price} €"),
-                            //leading: Image.network(user.avatar!),
-
-                            //leading: Text("${article.created_at}"),
-                          ),
-
-                        ),
-                        Align(
-                            alignment: Alignment.bottomRight,
-                            child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Text("${getArticleDateFormat(
-                                    article.created_at)} by "
-                                    "${author_pseudo}")
-                            )
-                        )
-                      ],);
-                    }
-                  );
-              },
-            );
-          }
+            if (!snapshot.hasData) {
+                // Il n'y aucune donnée dans la BDD
+                return const CircularProgressIndicator.adaptive();
+            } else {
+                List documents = snapshot.data!.docs;
+                return ListView.builder(
+                  //gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                    padding: EdgeInsets.all(20),
+                    itemCount: documents.length,
+                    itemBuilder: (context,index){
+                        AnnouncementModel article = AnnouncementModel(documents[index]);
+                        return FutureBuilder(
+                            future: FirestoreHelper().getUserPseudoFromAnnouncement(article.user_uid),
+                            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                                String author_pseudo = "";
+                                if (!snapshot.hasData) {
+                                    author_pseudo = article.author_pseudo;
+                                } else {
+                                    author_pseudo = snapshot.data.toString();
+                                }
+                                return Column(children: [
+                                    Card(
+                                        elevation: 10,
+                                        color: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10)),
+                                        child: ListTile(
+                                          onTap: () {
+                                          },
+                                          title: Text(article.title),
+                                          subtitle: Text(article.description),
+                                          trailing: Text("${article.price} €"),
+                                        ),
+                                    ),
+                                    Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Text("${getArticleDateFormat(
+                                                article.created_at)} by "
+                                                "${author_pseudo}")
+                                        )
+                                    )
+                                ],);
+                            }
+                        );
+                    },
+                );
+            }
         }
     );
   }
