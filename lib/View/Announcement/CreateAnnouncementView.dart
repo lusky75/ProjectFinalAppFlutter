@@ -1,13 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:projet_final_app_flutter/View/AnnouncementsView.dart';
-import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
+import 'package:projet_final_app_flutter/View/Announcement/AnnouncementsView.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
-import '../Component/CustomAlertDialog.dart';
+import '../../Component/CustomAlertDialog.dart';
 
 class CreateAnnouncementView extends StatefulWidget {
   @override

@@ -3,15 +3,17 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/Model/AnnouncementModel.dart';
 import 'package:projet_final_app_flutter/Model/UserModel.dart';
 
 class FirestoreHelper {
 
-  //Attributs
+  //Attributes
   final auth = FirebaseAuth.instance;
   final fire_users = FirebaseFirestore.instance.collection("Users");
   final fire_announcements = FirebaseFirestore.instance.collection("Announcements");
+  final fire_favorites = FirebaseFirestore.instance.collection("Favorites");
 
   final storage = FirebaseStorage.instance;
 
@@ -97,8 +99,8 @@ class FirestoreHelper {
     fire_announcements.add(map);
   }
 
-  updateAnnouncement(String article_id , Map<String,dynamic> map){
-    fire_announcements.doc(article_id).update(map);
+  updateAnnouncement(String announcement_id , Map<String,dynamic> map){
+    fire_announcements.doc(announcement_id).update(map);
   }
 
   deleteAnnouncement(String id) {
@@ -108,5 +110,51 @@ class FirestoreHelper {
   Future<String> getUserPseudoFromAnnouncement(String uid) async {
     DocumentSnapshot snapshot = await fire_users.doc(uid).get();
     return UserModel(snapshot).pseudo ?? "";
+  }
+
+
+  // Favorites methods
+  Future <AnnouncementModel> getFavoriteAnnouncements(String uid, String a_id) async {
+    AnnouncementModel announcementModel = AnnouncementModel.empty();
+
+    QuerySnapshot query = await fire_favorites.where("USER_UID", isEqualTo: uid)
+        .where("ANNOUNCEMENT_ID", isEqualTo: a_id)
+        .get();
+    var element = query.docs[0];
+    String announcement_id = element["ANNOUNCEMENT_ID"];
+    DocumentSnapshot snapshot = await fire_announcements.doc(announcement_id).get();
+    announcementModel = AnnouncementModel(snapshot);
+    return announcementModel;
+  }
+
+  createFavorite(String announcement_id, String user_uid) async {
+    Map<String,dynamic> map = {
+      "ANNOUNCEMENT_ID": announcement_id,
+      "USER_UID" : user_uid,
+    };
+    await addFavorite(map);
+  }
+
+  addFavorite(Map<String,dynamic> map) async {
+    QuerySnapshot query = await fire_favorites.where('USER_UID', isEqualTo: map["USER_UID"])
+        .where('ANNOUNCEMENT_ID', isEqualTo: map["ANNOUNCEMENT_ID"]).get();
+
+    if (!query.docs.isEmpty) {
+      return;
+    }
+    fire_favorites.add(map);
+  }
+
+  deleteFavoriteAnnouncement(String announcement_id, String user_uid) {
+    var jobskill_query = fire_favorites.where('ANNOUNCEMENT_ID', isEqualTo: announcement_id)
+        .where('USER_UID', isEqualTo: user_uid);
+    jobskill_query
+        .get()
+        .then((snapshot)  {
+          snapshot.docs.forEach((doc) {
+            doc.reference.delete();
+          });
+        }
+        );
   }
 }

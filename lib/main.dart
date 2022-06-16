@@ -28,13 +28,13 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const LoginPage(title: 'Flutter project'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has FirestoreHelper.dart State object (defined below) that contains fields that affect
@@ -48,10 +48,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginPageState extends State<LoginPage> {
 
   String email = "";
   String password = "";
@@ -77,7 +77,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
   Widget bodyPage(){
     //Créer un design de connexion comportant des champs d'entrée et un bouton
     //3 éléments(adresse mail, mot de passe , bouton) + 1 élément de logo
@@ -99,6 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
         const SizedBox(height : 10),
         //Choix pour l'utilisateur
         ToggleButtons(
+          borderWidth: 1,
+          borderColor: Colors.grey,
           children: const [
             Text("Register"),
             Text("Login")
@@ -120,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           },
         ),
-
+        const SizedBox(height : 10),
         //Afficher le nom suivant les différents cas
         (isregister) ? TextField(
             decoration : InputDecoration(
@@ -135,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
               });
             }
         ): Container(),
-
+        const SizedBox(height : 10),
         (isregister) ? TextField(
             decoration : InputDecoration(
                 hintText : "Entrer votre prénom",
@@ -148,7 +149,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 firstname = value;
               });
             }
-
         ): Container(),
 
         //Champs adresse mail
@@ -167,7 +167,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 email = value;
               });
             }
-
         ),
 
         //champs mot de passe
@@ -180,19 +179,13 @@ class _MyHomePageState extends State<MyHomePage> {
               border : OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20)
               ),
-
             ),
             onChanged : (value){
               setState((){
                 password = value;
               });
             }
-
-
         ),
-
-
-
         //Bouton
         const SizedBox(height : 10),
 
@@ -211,13 +204,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                   loginRequest();
               }
-
-
             },
             child : Text("Validate")
-
         )
-
       ],
     );
   }
@@ -232,7 +221,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
   //Fonction
   registerRequest(){
     FirestoreHelper().createUser(lastname, created_at, password, email, firstname).then((value){
@@ -245,15 +233,10 @@ class _MyHomePageState extends State<MyHomePage> {
             return MyApp();
           }
       ));
-
-
     }).catchError((error){
       _showMyDialog("Error register", "${error}");
     });
-
   }
-
-
 
   loginRequest(){
     FirestoreHelper().connectUser(email, password).then((value){
@@ -263,14 +246,8 @@ class _MyHomePageState extends State<MyHomePage> {
             return HomeView();
           }
       ));
-
     }).catchError((error){
       _showMyDialog("Error login", "${error}");
     });
-
   }
-
-
-
-
 }

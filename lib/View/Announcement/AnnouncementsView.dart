@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
+import 'package:projet_final_app_flutter/Component/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Model/AnnouncementModel.dart';
-import 'package:projet_final_app_flutter/View/CreateAnnouncementView.dart';
+import 'package:projet_final_app_flutter/View/Announcement/CreateAnnouncementView.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
 
 class AnnouncementsView extends StatefulWidget {

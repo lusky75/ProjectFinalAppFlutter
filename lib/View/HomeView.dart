@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/Model/AnnouncementModel.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
-import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
+import 'package:projet_final_app_flutter/Component/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
 import 'package:intl/intl.dart';
 
@@ -112,6 +111,13 @@ class HomeViewState extends State<HomeView>{
                                           subtitle: Text(article.description),
                                           trailing: Text("${article.price} €"),
                                         ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.favorite),
+                                      color: Colors.red,
+                                      onPressed: () {
+                                          FirestoreHelper().createFavorite(article.id, GlobalUser.id);
+                                      },
                                     ),
                                     Align(
                                         alignment: Alignment.bottomRight,

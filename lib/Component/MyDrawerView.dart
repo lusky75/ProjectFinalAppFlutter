@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Services/global.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:projet_final_app_flutter/View/AnnouncementsView.dart';
+import 'package:projet_final_app_flutter/View/Announcement/AnnouncementsView.dart';
 import 'package:projet_final_app_flutter/View/HomeView.dart';
-import 'package:projet_final_app_flutter/View/ProfileView.dart';
+import 'package:projet_final_app_flutter/View/Profile/ProfileView.dart';
 import 'package:projet_final_app_flutter/main.dart';
 import 'package:projet_final_app_flutter/Model/UserModel.dart';
+
+import '../View/Announcement/FavoriteAnnouncementsView.dart';
 
 class MyDrawerView extends StatefulWidget{
   @override
@@ -119,6 +121,18 @@ class MyDrawerViewState extends  State<MyDrawerView>{
                 Navigator.push(context,  MaterialPageRoute(
                     builder: (context){
                       return AnnouncementsView();
+                    })
+                )
+              },
+            ),
+
+            ListTile(
+              leading: Icon(Icons.favorite),
+              title: Text('My favorites'),
+              onTap: () => {
+                Navigator.push(context,  MaterialPageRoute(
+                    builder: (context){
+                      return FavoriteAnnouncementsView();
                     })
                 )
               },
