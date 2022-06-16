@@ -2,22 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Constructor of class Article by Firebase
 
-class ArticleModel {
+class AnnouncementModel {
   //Attributs
   late String id ;
   late String title;
   late String description;
+  late double price;
   late String author_pseudo;
   late String user_uid;
   DateTime created_at =  DateTime.now();
 
   //Constructor
-  ArticleModel(DocumentSnapshot snapshot){
+  AnnouncementModel(DocumentSnapshot snapshot){
     String? provisoire;
     id = snapshot.id;
     Map<String,dynamic> map = snapshot.data() as Map<String,dynamic>;
     title = map["TITLE"];
     description = map["DESCRIPTION"];
+    price = map["PRICE"];
     user_uid = map["USER_UID"];
     provisoire = map["AUTHOR_PSEUDO"];
     if (provisoire == null) {
@@ -30,10 +32,11 @@ class ArticleModel {
   }
 
   //Deuxième constructeur qui affecter les valeurs à vide
-  ArticleModel.empty(){
+  AnnouncementModel.empty(){
     id = "";
     title = "";
     description = "";
+    price = 0;
     author_pseudo = "";
     created_at = DateTime.now();
   }

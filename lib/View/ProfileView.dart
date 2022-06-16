@@ -19,7 +19,7 @@ class ProfileViewState extends State<ProfileView> {
     // TODO: implement build
     return Scaffold(
         drawer: Container(
-          width: MediaQuery.of(context).size.width/2,
+          width: MediaQuery.of(context).size.width / 1.5,
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
           child: MyDrawerView(),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Services/global.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:projet_final_app_flutter/View/ArticlesView.dart';
+import 'package:projet_final_app_flutter/View/AnnouncementsView.dart';
 import 'package:projet_final_app_flutter/View/HomeView.dart';
 import 'package:projet_final_app_flutter/View/ProfileView.dart';
 import 'package:projet_final_app_flutter/main.dart';
@@ -114,11 +114,11 @@ class MyDrawerViewState extends  State<MyDrawerView>{
 
             ListTile(
               leading: Icon(Icons.border_color),
-              title: Text('My articles'),
+              title: Text('My announcements'),
               onTap: () => {
                 Navigator.push(context,  MaterialPageRoute(
                     builder: (context){
-                      return ArticlesView();
+                      return AnnouncementsView();
                     })
                 )
               },

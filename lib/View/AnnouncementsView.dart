@@ -2,25 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
-import 'package:projet_final_app_flutter/Model/ArticleModel.dart';
+import 'package:projet_final_app_flutter/Model/AnnouncementModel.dart';
 import 'package:projet_final_app_flutter/View/CreateArticleView.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
 
-class ArticlesView extends StatefulWidget {
+class AnnouncementsView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return ArticlesViewState();
+    return AnnouncementsViewState();
   }
 }
 
-class ArticlesViewState extends State<ArticlesView> {
+class AnnouncementsViewState extends State<AnnouncementsView> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       drawer: Container(
-        width: MediaQuery.of(context).size.width/2,
+        width: MediaQuery.of(context).size.width / 1.5,
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
         child: MyDrawerView(),
@@ -44,7 +44,7 @@ class ArticlesViewState extends State<ArticlesView> {
                       onPressed: () {
                         Navigator.push(context,  MaterialPageRoute(
                             builder: (context){
-                              selectedArticle = ArticleModel.empty();
+                              selectedAnnouncement = AnnouncementModel.empty();
                               return CreateArticleView();
                             })
                         );
@@ -53,7 +53,7 @@ class ArticlesViewState extends State<ArticlesView> {
                         Icons.edit,
                         size: 24.0,
                       ),
-                      label: Text('Write a new article'), // <-- Text
+                      label: Text('Write a new announcement'), // <-- Text
                     ),
                 )
               )
@@ -64,13 +64,13 @@ class ArticlesViewState extends State<ArticlesView> {
 
   /*
     The bodyPage display list of current user's article.
-    For each article's if user.id == article.user_uid => it shows a Card
+    For each announcement's if user.id == announcement.user_uid => it shows a Card
     Else an empty Container
    */
   Widget bodyPage(){
     return StreamBuilder<QuerySnapshot>(
       //On cherche tous les documentssnpshots de l'utilisateur dans la bdd
-        stream: FirestoreHelper().fire_articles.snapshots(),
+        stream: FirestoreHelper().fire_announcements.snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData){
             // Il n'y aucune donnée dans la BDD
@@ -84,18 +84,16 @@ class ArticlesViewState extends State<ArticlesView> {
                   padding: EdgeInsets.all(20),
                   itemCount: documents.length,
                   itemBuilder: (context,index){
-                    ArticleModel article = ArticleModel(documents[index]);
+                    AnnouncementModel article = AnnouncementModel(documents[index]);
                     if (GlobalUser.id == article.user_uid)
                     {
-
                       return Dismissible(
-
                           direction: DismissDirection.endToStart,
                           onDismissed: (DismissDirection direction) {
-                            /*
+                            /**
                             Delete the article when the card is dismissed from right to left
                              */
-                            FirestoreHelper().deleteArticle(article.id);
+                            FirestoreHelper().deleteAnnouncement(article.id);
                           },
                           key: Key(article.id),
                           child: Column(children: [
@@ -106,18 +104,20 @@ class ArticlesViewState extends State<ArticlesView> {
                                   borderRadius: BorderRadius.circular(10)),
                               child: ListTile(
                                 onTap: () {
+                                  /**
+                                    Action called when the ListTile is selected
+                                    It fills data of article to selectedArticle and navigate to CreateArticleView
+                                   */
                                   Navigator.push(context,  MaterialPageRoute(
                                       builder: (context){
-                                        selectedArticle = article;
+                                        selectedAnnouncement = article;
                                         return CreateArticleView();
                                       })
                                   );
                                 },
                                 title: Text(article.title),
                                 subtitle: Text(article.description),
-                                //leading: Image.network(user.avatar!),
-
-                                //leading: Text("${article.created_at}"),
+                                trailing: Text("${article.price} €"),
                               ),
 
                             ),

@@ -6,6 +6,7 @@ import 'package:projet_final_app_flutter/View/HomeView.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -58,9 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
   DateTime created_at = DateTime.now();
   bool isregister = false;
   List<bool> selection = [true,false];
-
-
-
 
   @override
   Widget build(BuildContext context) {

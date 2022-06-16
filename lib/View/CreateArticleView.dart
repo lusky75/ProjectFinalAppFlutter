@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:projet_final_app_flutter/View/ArticlesView.dart';
+import 'package:projet_final_app_flutter/View/AnnouncementsView.dart';
 import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 
 class CreateArticleView extends StatefulWidget {
   @override
@@ -15,31 +16,39 @@ class CreateArticleView extends StatefulWidget {
 }
 
 class CreateArticleViewState extends State<CreateArticleView> {
-  String article_id = "";
+  String announcement_id = "";
   String title = "";
+  double price = 0;
   String description = "";
   DateTime created_at = DateTime.now();
 
-  final _myArticleTitleController = TextEditingController();
-  final _myArticleDescriptionController = TextEditingController();
+  /**
+   * Those controllers are used to fill TextFields' content at initState()
+   */
+  final _myAnnouncementTitleController = TextEditingController();
+  final _myAnnouncementDescriptionController = TextEditingController();
+  final _myAnnouncementPriceController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    article_id = selectedArticle.id;
-    title = selectedArticle.title;
-    description = selectedArticle.description;
+    announcement_id = selectedAnnouncement.id;
+    title = selectedAnnouncement.title;
+    description = selectedAnnouncement.description;
 
-    _myArticleTitleController.text = title;
-    _myArticleDescriptionController.text = description;
+    _myAnnouncementTitleController.text = title;
+    _myAnnouncementDescriptionController.text = description;
+    _myAnnouncementPriceController.text = price.toString();
   }
 
-  //Functions
-  createArticle(){
-    FirestoreHelper().createArticle(title, description, created_at, GlobalUser.pseudo ?? "", GlobalUser.id).then((value){
+  /**
+   * Create announcement then navigate to ArticlesView()
+   */
+  createAnnouncement(){
+    FirestoreHelper().createAnnouncement(title, description, price, created_at, GlobalUser.pseudo ?? "", GlobalUser.id).then((value){
       Navigator.push(context, MaterialPageRoute(
           builder: (context){
-            return ArticlesView();
+            return AnnouncementsView();
           }
       ));
 
@@ -49,15 +58,18 @@ class CreateArticleViewState extends State<CreateArticleView> {
     });
   }
 
-  updateArticle() {
+  /**
+   * Update article's data from map's parameters then navigate to ArticlesView()
+   */
+  updateAnnouncement() {
     Map<String,dynamic> map = {
       "TITLE": title,
       "DESCRIPTION": description,
     };
-    FirestoreHelper().updateArticle(article_id, map);
+    FirestoreHelper().updateAnnouncement(announcement_id, map);
     Navigator.push(context, MaterialPageRoute(
         builder: (context){
-          return ArticlesView();
+          return AnnouncementsView();
         }
     ));
   }
@@ -81,7 +93,7 @@ class CreateArticleViewState extends State<CreateArticleView> {
                       title = value;
                     });
                   },
-                  controller: _myArticleTitleController,
+                  controller: _myAnnouncementTitleController,
                 ),
                 Text("Description"),
                 Card(
@@ -94,28 +106,44 @@ class CreateArticleViewState extends State<CreateArticleView> {
                             description = value;
                           });
                         },
-                        controller: _myArticleDescriptionController,
+                        controller: _myAnnouncementDescriptionController,
                         maxLines: 8, //or null
-                        decoration: InputDecoration.collapsed(hintText: "Enter your text here"),
+                        decoration: InputDecoration.collapsed(hintText: "Enter your description here"),
                       ),
                     )
                 ),
+                Text("Price"),
+                TextFormField(
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  onChanged : (String value) {
+                    setState(() {
+                      print("ok");
+                      price = double.parse(value);
+                    });
+                  },
+                  controller: _myAnnouncementPriceController,
+                ),
                 ElevatedButton.icon(
                   onPressed: () async {
+                    /**
+                     * If title of description are empty it exits the method
+                     * If announcement_id is not empty, it must update the announcement
+                     * Else it creates a new one.
+                     */
                     if (title.length == 0 && description.length == 0) {
                       return;
                     }
-                    if (article_id != "") {
-                      await updateArticle();
+                    if (announcement_id != "") {
+                      await updateAnnouncement();
                     } else {
-                      await createArticle();
+                      await createAnnouncement();
                     }
                   },
                   icon: Icon( // <-- Icon
                     Icons.edit,
                     size: 24.0,
                   ),
-                  label: Text('Submit the article'), // <-- Text
+                  label: Text('Submit the article'),
                 ),
               ],
             )

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:projet_final_app_flutter/Model/ArticleModel.dart';
+import 'package:projet_final_app_flutter/Model/AnnouncementModel.dart';
 import 'package:projet_final_app_flutter/Services/FirestoreHelper.dart';
 import 'package:projet_final_app_flutter/View/MyDrawerView.dart';
 import 'package:projet_final_app_flutter/Services/librairies.dart';
@@ -20,7 +20,7 @@ class HomeViewState extends State<HomeView>{
   Widget build(BuildContext context){
     return Scaffold(
         drawer: Container(
-          width: MediaQuery.of(context).size.width/2,
+          width: MediaQuery.of(context).size.width / 1.5,
           height: MediaQuery.of(context).size.height,
           color: Colors.white,
           child: MyDrawerView(),
@@ -38,7 +38,7 @@ class HomeViewState extends State<HomeView>{
   Widget bodyPage(){
     return StreamBuilder<QuerySnapshot>(
       //On cherche tous les documentssnpshots de l'utilisateur dans la bdd
-        stream: FirestoreHelper().fire_articles.snapshots(),
+        stream: FirestoreHelper().fire_announcements.snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData){
             // Il n'y aucune donnée dans la BDD
@@ -50,7 +50,7 @@ class HomeViewState extends State<HomeView>{
               padding: EdgeInsets.all(20),
               itemCount: documents.length,
               itemBuilder: (context,index){
-                ArticleModel article = ArticleModel(documents[index]);
+                AnnouncementModel article = AnnouncementModel(documents[index]);
                   return Column(children: [
                       Card(
                         elevation: 10,
@@ -64,6 +64,7 @@ class HomeViewState extends State<HomeView>{
                           },
                           title: Text(article.title),
                           subtitle: Text(article.description),
+                          trailing: Text("${article.price} €"),
                           //leading: Image.network(user.avatar!),
 
                           //leading: Text("${article.created_at}"),

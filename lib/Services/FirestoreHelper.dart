@@ -3,15 +3,15 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:projet_final_app_flutter/Model/ArticleModel.dart';
+import 'package:projet_final_app_flutter/Model/AnnouncementModel.dart';
 import 'package:projet_final_app_flutter/Model/UserModel.dart';
 
-class FirestoreHelper{
+class FirestoreHelper {
 
   //Attributs
   final auth = FirebaseAuth.instance;
   final fire_users = FirebaseFirestore.instance.collection("Users");
-  final fire_articles = FirebaseFirestore.instance.collection("Articles");
+  final fire_announcements = FirebaseFirestore.instance.collection("Announcements");
 
   final storage = FirebaseStorage.instance;
 
@@ -49,11 +49,9 @@ class FirestoreHelper{
 
   }
 
-  String getIdentifant(){
+  String getIdentifiant(){
     return auth.currentUser!.uid;
   }
-
-
 
   addUser(String uid , Map<String,dynamic> map){
     fire_users.doc(uid).set(map);
@@ -69,7 +67,7 @@ class FirestoreHelper{
 
   // Image storage method
   Future <String> stockageImage(Uint8List bytes, String name) async {
-    String nameFinal = name+getIdentifant();
+    String nameFinal = name + getIdentifiant();
     String url = "";
     //Stockage de l'image dans la bdd
     print("storage: ${storage.ref("ProfileImage")}");
@@ -81,28 +79,30 @@ class FirestoreHelper{
     return url;
   }
 
-  // Article methods
-  createArticle(String title, String description, DateTime created_at, String author_pseudo, String user_id) async {
+  // Announcement methods
+
+  createAnnouncement(String title, String description, double price, DateTime created_at, String author_pseudo, String user_id) async {
     Map<String,dynamic> map = {
       "TITLE": title,
       "DESCRIPTION" : description,
+      "PRICE": price,
       "CREATED_AT" : created_at,
       "AUTHOR_PSEUDO" : author_pseudo,
       "USER_UID" : user_id
     };
-    await addArticle(user_id, map);
+    await addAnnouncement(user_id, map);
   }
 
-  addArticle(String uid , Map<String,dynamic> map) {
-    fire_articles.add(map);
+  addAnnouncement(String uid , Map<String,dynamic> map) {
+    fire_announcements.add(map);
   }
 
-  updateArticle(String article_id , Map<String,dynamic> map){
-    fire_articles.doc(article_id).update(map);
+  updateAnnouncement(String article_id , Map<String,dynamic> map){
+    fire_announcements.doc(article_id).update(map);
   }
 
-  deleteArticle(String id) {
-    fire_articles.doc(id).delete();
+  deleteAnnouncement(String id) {
+    fire_announcements.doc(id).delete();
   }
 
 
