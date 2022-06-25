@@ -1,5 +1,9 @@
 # ProjectFinalAppFlutter
 
+Pour lancer le projet il faut lancer les commandes suivantes:
+
+
+
 Au lancement du projet, la page main contient un login et un register.
 S'il y a une erreur, affiche une popup: description de l'erreur.
 
